@@ -1,5 +1,5 @@
 ---
-title: "Peer Assesment"
+title: "Peer Assessment"
 author: "Pratigya Subedi"
 date: "February 7, 2016"
 output: 
