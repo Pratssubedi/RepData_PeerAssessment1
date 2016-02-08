@@ -1,11 +1,6 @@
----
-title: "Peer Assesment"
-author: "Pratigya Subedi"
-date: "February 7, 2016"
-output: 
-  html_document: 
-    keep_md: yes
----
+# Peer Assesment
+Pratigya Subedi  
+February 7, 2016  
 
 # Introduction
 
@@ -27,7 +22,8 @@ The dataset is stored in a comma-separated-value (CSV) file and there are a tota
 
 ## Loading Data into R
 
-```{r, echo=TRUE}
+
+```r
 #set file path
 filePath <- "F:/Pratssubedi/Coursera-DataScience/Rep Research/repdata-data-activity/activity.csv"
 # read file as dataset
@@ -35,11 +31,35 @@ activity_data <- read.csv(filePath)
 ```
 
 ## Exploring Data
-```{r, echo=TRUE}
+
+```r
 ## explore dataset
 head(activity_data, 5)
+```
+
+```
+##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+```
+
+```r
 dim(activity_data)
+```
+
+```
+## [1] 17568     3
+```
+
+```r
 names(activity_data)
+```
+
+```
+## [1] "steps"    "date"     "interval"
 ```
 
 ## Part 1: What is mean total number of steps taken per day?
@@ -52,7 +72,8 @@ names(activity_data)
 
 We will aggregate the steps for each day and plot a histogram for this.
 
-```{r, echo=TRUE}
+
+```r
 # Get total number of steps for each day
 steps_taken_per_day<- aggregate(cbind(activity_data$steps) ~ date, data=activity_data, FUN=sum)
 #set proper column names
@@ -64,17 +85,29 @@ hist(x=steps_taken_per_day$totalStepsPerDay,
      xlab="Total steps per day",
      ylab="Frequency",
      main="The distribution of total number of steps taken each day")
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)
 
 Now calculating the mean and median:
 
-```{r, echo=TRUE}
+
+```r
 #mean of total steps for each day
 mean(steps_taken_per_day$totalStepsPerDay)
+```
 
+```
+## [1] 10766.19
+```
+
+```r
 #median of total steps for each day
 median(steps_taken_per_day$totalStepsPerDay)
+```
+
+```
+## [1] 10765
 ```
 
 
@@ -88,7 +121,8 @@ Thus, the mean is 10766.19 steps and the median is 10765 steps.
 
 Similar to previous step, we will first aggregate data and plot it.
 
-```{r, echo=TRUE}
+
+```r
 # Get total number of steps for each interval
 agg_Steps_By_Intervals <- aggregate(cbind(activity_data$steps) ~ interval, data=activity_data, FUN=mean)
 colnames(agg_Steps_By_Intervals) <- c("intervals", "total_Steps_By_Interval")
@@ -98,10 +132,17 @@ plot(agg_Steps_By_Intervals$intervals,agg_Steps_By_Intervals$total_Steps_By_Inte
      main="Average Number of Steps per Day by Interval")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)
+
 Now, calculating the maximum interval: 
-```{r, echo=TRUE}
+
+```r
 #calculate interval that has the maximum number of steps using which.max function
 agg_Steps_By_Intervals[which.max(agg_Steps_By_Intervals$total_Steps_By_Interval),1]
+```
+
+```
+## [1] 835
 ```
 
 So interval 835 contains maximum number of steps.
@@ -116,50 +157,68 @@ Note that there are a number of days/intervals where there are missing values (c
 * Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
 Total missing values calculation: 
-```{r, echo=TRUE}
-sum(is.na(activity_data$steps))
 
+```r
+sum(is.na(activity_data$steps))
+```
+
+```
+## [1] 2304
 ```
 
 So, total 2304 NAs need to be removed and replaced.
 These values will be replaced with the average value for that particular interval where the value is missing.
 
-```{r, echo=TRUE}
+
+```r
 #replace NAs with average for that interval
 imputed_Data <- transform(activity_data, steps = ifelse(is.na(activity_data$steps),
                                               agg_Steps_By_Intervals$total_Steps_By_Interval[match(activity_data$interval, agg_Steps_By_Intervals$intervals)], 
                                                activity_data$steps))
-
 ```
 
 And now we are aggregating the steps for the imputed dataset
 
-```{r, echo=TRUE}
+
+```r
 # Get total number of steps for each day from the imputed_Data
 steps_taken_per_dayForImputed <- aggregate(cbind(imputed_Data$steps) ~ date, data=imputed_Data, FUN=sum)
 
 #set proper column names
 colnames(steps_taken_per_dayForImputed) <- c("dates", "totalStepsPerDay")
-
 ```
 
 Now we can compare the histogram for the imputed v/s non-imputed data set.
 
-```{r, echo=TRUE}
+
+```r
 hist(steps_taken_per_dayForImputed$totalStepsPerDay, main = paste("Total Steps Each Day"), col="dark blue", xlab="Number of Steps")
 
 #Create Histogram to show difference. 
 hist(steps_taken_per_day$totalStepsPerDay,  col="green", add=T)
 
 legend("topright", c("Imputed", "Non-imputed"), col=c("dark blue", "green"), lwd=10)
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)
 
 Now, we will calculate the mean and median based on the new data set.
 
-```{r, echo=TRUE}
+
+```r
 mean(steps_taken_per_dayForImputed$totalStepsPerDay)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(steps_taken_per_dayForImputed$totalStepsPerDay)
+```
+
+```
+## [1] 10766.19
 ```
 
 Imputed Data Mean = 10766.19 and Meadian = 10766.19
@@ -178,7 +237,8 @@ For this part the weekdays() function may be of some help here. Use the dataset 
 
 Here, we will identify each date as weekend or weekday and label that in the data set as a factor.
 
-```{r, echo=TRUE}
+
+```r
 # helper function to decide if a day is a week day or not
 # pass date as parameter
 is_Weekday <- function(day) {
@@ -190,13 +250,22 @@ imputed_Data$dayIndicator <- sapply(as.Date(imputed_Data$date), is_Weekday)
 
 #explore the new data column
 head(imputed_Data)
+```
 
+```
+##       steps       date interval dayIndicator
+## 1 1.7169811 2012-10-01        0      Weekday
+## 2 0.3396226 2012-10-01        5      Weekday
+## 3 0.1320755 2012-10-01       10      Weekday
+## 4 0.1509434 2012-10-01       15      Weekday
+## 5 0.0754717 2012-10-01       20      Weekday
+## 6 2.0943396 2012-10-01       25      Weekday
 ```
 
 Finally, we plot the aggregate steps using lattice library to identify the  activity patterns between weekdays and weekends.
 
-```{r, echo=TRUE}
 
+```r
 agg_week_Data <- aggregate(steps ~ dayIndicator+interval, data=imputed_Data, FUN=mean)
 
 library(lattice)
@@ -207,8 +276,9 @@ xyplot(steps ~ interval | factor(dayIndicator),
        type="l",
        lty=1,
        data=agg_week_Data)
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-13-1.png)
 
 
 
