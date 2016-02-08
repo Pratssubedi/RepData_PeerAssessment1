@@ -30,39 +30,8 @@ filePath <- "F:/Pratssubedi/Coursera-DataScience/Rep Research/repdata-data-activ
 activity_data <- read.csv(filePath)
 ```
 
-## Exploring Data
 
-```r
-## explore dataset
-head(activity_data, 5)
-```
-
-```
-##   steps       date interval
-## 1    NA 2012-10-01        0
-## 2    NA 2012-10-01        5
-## 3    NA 2012-10-01       10
-## 4    NA 2012-10-01       15
-## 5    NA 2012-10-01       20
-```
-
-```r
-dim(activity_data)
-```
-
-```
-## [1] 17568     3
-```
-
-```r
-names(activity_data)
-```
-
-```
-## [1] "steps"    "date"     "interval"
-```
-
-## Part 1: What is mean total number of steps taken per day?
+## Task 1: What is mean total number of steps taken per day?
 
 * For this part of the assignment, you can ignore the missing values in the dataset.
 * Calculate the total number of steps taken per day
@@ -77,24 +46,24 @@ We will aggregate the steps for each day and plot a histogram for this.
 # Get total number of steps for each day
 steps_taken_per_day<- aggregate(cbind(activity_data$steps) ~ date, data=activity_data, FUN=sum)
 #set proper column names
-colnames(steps_taken_per_day) <- c("dates", "totalStepsPerDay")
+colnames(steps_taken_per_day) <- c("dates", "total_Steps_Per_Day")
 
 #plot histogram for total number of steps taken each data
-hist(x=steps_taken_per_day$totalStepsPerDay,
+hist(x=steps_taken_per_day$total_Steps_Per_Day,
      col="dark blue",
      xlab="Total steps per day",
      ylab="Frequency",
      main="The distribution of total number of steps taken each day")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)
 
 Now calculating the mean and median:
 
 
 ```r
 #mean of total steps for each day
-mean(steps_taken_per_day$totalStepsPerDay)
+mean(steps_taken_per_day$total_Steps_Per_Day)
 ```
 
 ```
@@ -103,7 +72,7 @@ mean(steps_taken_per_day$totalStepsPerDay)
 
 ```r
 #median of total steps for each day
-median(steps_taken_per_day$totalStepsPerDay)
+median(steps_taken_per_day$total_Steps_Per_Day)
 ```
 
 ```
@@ -111,9 +80,9 @@ median(steps_taken_per_day$totalStepsPerDay)
 ```
 
 
-Thus, the mean is 10766.19 steps and the median is 10765 steps.
+So, the mean is 10766.19 steps and the median is 10765 steps.
 
-## Part 2: What is the average daily activity pattern?
+## Task 2: What is the average daily activity pattern?
 
 * Next, we will make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 * Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
@@ -132,7 +101,7 @@ plot(agg_Steps_By_Intervals$intervals,agg_Steps_By_Intervals$total_Steps_By_Inte
      main="Average Number of Steps per Day by Interval")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)
 
 Now, calculating the maximum interval: 
 
@@ -147,7 +116,7 @@ agg_Steps_By_Intervals[which.max(agg_Steps_By_Intervals$total_Steps_By_Interval)
 
 So interval 835 contains maximum number of steps.
 
-## Part 3: Imputing missing values
+## Task 3: Imputing missing values
 
 Note that there are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.
 
@@ -185,28 +154,28 @@ And now we are aggregating the steps for the imputed dataset
 steps_taken_per_dayForImputed <- aggregate(cbind(imputed_Data$steps) ~ date, data=imputed_Data, FUN=sum)
 
 #set proper column names
-colnames(steps_taken_per_dayForImputed) <- c("dates", "totalStepsPerDay")
+colnames(steps_taken_per_dayForImputed) <- c("dates", "total_Steps_Per_Day")
 ```
 
 Now we can compare the histogram for the imputed v/s non-imputed data set.
 
 
 ```r
-hist(steps_taken_per_dayForImputed$totalStepsPerDay, main = paste("Total Steps Each Day"), col="dark blue", xlab="Number of Steps")
+hist(steps_taken_per_dayForImputed$total_Steps_Per_Day, main = paste("Total Steps Each Day"), col="dark blue", xlab="Number of Steps")
 
 #Create Histogram to show difference. 
-hist(steps_taken_per_day$totalStepsPerDay,  col="green", add=T)
+hist(steps_taken_per_day$total_Steps_Per_Day,  col="green", add=T)
 
 legend("topright", c("Imputed", "Non-imputed"), col=c("dark blue", "green"), lwd=10)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png)
 
 Now, we will calculate the mean and median based on the new data set.
 
 
 ```r
-mean(steps_taken_per_dayForImputed$totalStepsPerDay)
+mean(steps_taken_per_dayForImputed$total_Steps_Per_Day)
 ```
 
 ```
@@ -214,7 +183,7 @@ mean(steps_taken_per_dayForImputed$totalStepsPerDay)
 ```
 
 ```r
-median(steps_taken_per_dayForImputed$totalStepsPerDay)
+median(steps_taken_per_dayForImputed$total_Steps_Per_Day)
 ```
 
 ```
@@ -223,12 +192,12 @@ median(steps_taken_per_dayForImputed$totalStepsPerDay)
 
 Imputed Data Mean = 10766.19 and Meadian = 10766.19
 
-Comparing these values to previous values of mean (10766.19) and median (10765), the new values are almost similar to non-imputed values. The median and mean are exactly same for the imputed data set most probably because we replaced the NA's with average values.
+The median and mean are exactly same for the imputed data set.The reason behind this is because we replaced the NA's with average values.
 
 The impact of imputing missing data on the estimates of the total daily number of steps is that 
 we now have higher frquency counts in the histogram at the center region which is closer to the mean value.
 
-## Part 4: Are there differences in activity patterns between weekdays and weekends?
+## Task 4: Are there differences in activity patterns between weekdays and weekends?
 
 For this part the weekdays() function may be of some help here. Use the dataset with the filled-in missing values for this part.
 
@@ -278,7 +247,7 @@ xyplot(steps ~ interval | factor(dayIndicator),
        data=agg_week_Data)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-13-1.png)
+![](PA1_template_files/figure-html/unnamed-chunk-12-1.png)
 
 
 
